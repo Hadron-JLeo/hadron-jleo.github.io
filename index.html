@@ -7,22 +7,31 @@
 <html>
 	<head>
 		<title>Jleo Portfolio</title>
-		<link rel="icon" type="image/x-icon" href="/images/favicon.png">
+		<link rel="icon" type="image/x-icon" href="images/favicon.ico">
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 		<link rel="stylesheet" href="assets/css/main.css" />
+		<link rel="stylesheet" href="assets/css/wave.css" />
 		<noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 	</head>
 	<body class="is-preload">
+
+
 
 		<!-- Wrapper -->
 			<div id="wrapper">
 
+			<!-- Background -->
+			<div>
+				<div class="wave"></div>
+				<div class="wave"></div>
+				<div class="wave"></div>	
+			</div>
+
 				<!-- Header -->
 					<header id="header">
-						<div class="logo">
-							<span class="icon fa-gem"></span>
-						</div>
+						
 						<div class="content">
 							<div class="inner">
 								<h1>SW. Engineering Portfolio</h1>
@@ -31,10 +40,10 @@
 						</div>
 						<nav>
 							<ul>
-								<li><a href="#intro">Github</a></li>
-								<li><a href="#work">Work</a></li>
-								<li><a href="#about">About</a></li>
-								<li><a href="#contact">Contact</a></li>
+								<li><a href="">Work</a></li>
+								<li><a href="https://github.com/Hadron-JLeo">Github <i class="fa fa-github" style="font-size:24px;"></i></a></li>
+								<li><a href="">About</a></li>
+								<li><a href="">Contact</a></li>
 								<!--<li><a href="#elements">Elements</a></li>-->
 							</ul>
 						</nav>
@@ -93,7 +102,7 @@
 									<li><a href="#" class="icon brands fa-twitter"><span class="label">Twitter</span></a></li>
 									<li><a href="#" class="icon brands fa-facebook-f"><span class="label">Facebook</span></a></li>
 									<li><a href="#" class="icon brands fa-instagram"><span class="label">Instagram</span></a></li>
-									<li><a href="#" class="icon brands fa-github"><span class="label">GitHub</span></a></li>
+									<li><a href="#" class="icon brands fa-github"><span class="fa label">GitHub </span>&#xf09b;</a></li>
 								</ul>
 							</article>
 
@@ -118,13 +127,13 @@
 									<h4>Preformatted</h4>
 									<pre><code>i = 0;
 
-while (!deck.isInOrder()) {
-    print 'Iteration ' + i;
-    deck.shuffle();
-    i++;
-}
+									while (!deck.isInOrder()) {
+										print 'Iteration ' + i;
+										deck.shuffle();
+										i++;
+									}
 
-print 'It took ' + i + ' iterations to sort the deck.';</code></pre>
+									print 'It took ' + i + ' iterations to sort the deck.';</code></pre>
 								</section>
 
 								<section>
@@ -341,16 +350,10 @@ print 'It took ' + i + ' iterations to sort the deck.';</code></pre>
 
 					</div>
 
-				<!-- Footer -->
-					<footer id="footer">
-						<p> Portfolio</p>
-					</footer>
-
 			</div>
 
-		<!-- BG -->
-			<div id="bg"></div>
-
+		<!-- BG  <div id="bg"></div>-->
+			
 		<!-- Scripts -->
 			<script src="assets/js/jquery.min.js"></script>
 			<script src="assets/js/browser.min.js"></script>
