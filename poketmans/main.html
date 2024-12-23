@@ -47,7 +47,6 @@
             </div>
         </div>
     </div>
-
 <script>
     let selectedAvatar = null;
     const dbName = "UserShopDB";
@@ -63,9 +62,11 @@
                 }
             };
             request.onsuccess = function(event) {
+                console.log("Database opened successfully.");
                 resolve(event.target.result);
             };
             request.onerror = function(event) {
+                console.error("Error opening database:", event.target.error);
                 reject(event.target.error);
             };
         });
@@ -98,14 +99,15 @@
         };
 
         store.put(user);
+        localStorage.setItem("currentUser", username); // Save user in localStorage
         alert("User created successfully!");
-        document.getElementById("createUserSection").style.display = "none";
-        document.getElementById("shopSection").style.display = "block";
+        console.log("User created:", user);
         loadUser(username);
     }
 
     // Load user data
     async function loadUser(username) {
+        console.log("Loading user:", username);
         const db = await openDatabase();
         const transaction = db.transaction("users", "readonly");
         const store = transaction.objectStore("users");
@@ -114,12 +116,18 @@
         request.onsuccess = function(event) {
             const user = event.target.result;
             if (user) {
+                console.log("User loaded:", user);
                 document.getElementById("currentUser").innerText = user.name;
                 document.getElementById("userPoints").innerText = user.points;
                 document.getElementById("userItems").innerText = user.items.length > 0 ? user.items.join(', ') : "None";
                 document.getElementById("createUserSection").style.display = "none";
                 document.getElementById("shopSection").style.display = "block";
+            } else {
+                console.warn("User not found.");
             }
+        };
+        request.onerror = function(event) {
+            console.error("Error loading user:", event.target.error);
         };
     }
 
@@ -127,7 +135,10 @@
     async function reloadUser() {
         const username = localStorage.getItem("currentUser");
         if (username) {
+            console.log("Reloading user from localStorage:", username);
             await loadUser(username);
+        } else {
+            console.log("No user found in localStorage.");
         }
     }
 
@@ -148,6 +159,7 @@
                 store.put(user);
 
                 alert(`You purchased ${itemName}!`);
+                console.log(`User updated after purchase:`, user);
                 document.getElementById("userPoints").innerText = user.points;
                 document.getElementById("userItems").innerText = user.items.join(', ');
             } else {
@@ -156,14 +168,10 @@
         };
     }
 
-    // Save current user to local storage
-    async function saveCurrentUser(username) {
-        localStorage.setItem("currentUser", username);
-    }
-
     // Initialize the app on page load
     window.onload = async function() {
-        reloadUser();
+        console.log("Page loaded. Attempting to reload user...");
+        await reloadUser();
     };
 </script>
 
