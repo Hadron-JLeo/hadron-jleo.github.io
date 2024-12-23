@@ -48,103 +48,124 @@
         </div>
     </div>
 
-    <script>
-        let selectedAvatar = null;
-        const dbName = "UserShopDB";
+<script>
+    let selectedAvatar = null;
+    const dbName = "UserShopDB";
 
-        // Open or create the database
-        function openDatabase() {
-            return new Promise((resolve, reject) => {
-                const request = indexedDB.open(dbName, 1);
-                request.onupgradeneeded = function(event) {
-                    const db = event.target.result;
-                    if (!db.objectStoreNames.contains("users")) {
-                        const userStore = db.createObjectStore("users", { keyPath: "name" });
-                    }
-                };
-                request.onsuccess = function(event) {
-                    resolve(event.target.result);
-                };
-                request.onerror = function(event) {
-                    reject(event.target.error);
-                };
-            });
+    // Open or create the database
+    function openDatabase() {
+        return new Promise((resolve, reject) => {
+            const request = indexedDB.open(dbName, 1);
+            request.onupgradeneeded = function(event) {
+                const db = event.target.result;
+                if (!db.objectStoreNames.contains("users")) {
+                    db.createObjectStore("users", { keyPath: "name" });
+                }
+            };
+            request.onsuccess = function(event) {
+                resolve(event.target.result);
+            };
+            request.onerror = function(event) {
+                reject(event.target.error);
+            };
+        });
+    }
+
+    // Select an avatar
+    function selectAvatar(avatar) {
+        selectedAvatar = avatar;
+        document.querySelectorAll('.avatar img').forEach(img => img.classList.remove('selected'));
+        document.querySelector(`img[src='${avatar}']`).classList.add('selected');
+    }
+
+    // Create a new user
+    async function createUser() {
+        const username = document.getElementById("username").value;
+        if (!username || !selectedAvatar) {
+            alert("Please enter a name and select an avatar.");
+            return;
         }
 
-        // Select an avatar
-        function selectAvatar(avatar) {
-            selectedAvatar = avatar;
-            document.querySelectorAll('.avatar img').forEach(img => img.classList.remove('selected'));
-            document.querySelector(`img[src='${avatar}']`).classList.add('selected');
-        }
+        const db = await openDatabase();
+        const transaction = db.transaction("users", "readwrite");
+        const store = transaction.objectStore("users");
 
-        // Create a new user
-        async function createUser() {
-            const username = document.getElementById("username").value;
-            if (!username || !selectedAvatar) {
-                alert("Please enter a name and select an avatar.");
-                return;
+        const user = {
+            name: username,
+            avatar: selectedAvatar,
+            points: 5,
+            items: []
+        };
+
+        store.put(user);
+        alert("User created successfully!");
+        document.getElementById("createUserSection").style.display = "none";
+        document.getElementById("shopSection").style.display = "block";
+        loadUser(username);
+    }
+
+    // Load user data
+    async function loadUser(username) {
+        const db = await openDatabase();
+        const transaction = db.transaction("users", "readonly");
+        const store = transaction.objectStore("users");
+        const request = store.get(username);
+
+        request.onsuccess = function(event) {
+            const user = event.target.result;
+            if (user) {
+                document.getElementById("currentUser").innerText = user.name;
+                document.getElementById("userPoints").innerText = user.points;
+                document.getElementById("userItems").innerText = user.items.length > 0 ? user.items.join(', ') : "None";
+                document.getElementById("createUserSection").style.display = "none";
+                document.getElementById("shopSection").style.display = "block";
             }
+        };
+    }
 
-            const db = await openDatabase();
-            const transaction = db.transaction("users", "readwrite");
-            const store = transaction.objectStore("users");
-
-            const user = {
-                name: username,
-                avatar: selectedAvatar,
-                points: 5,
-                items: []
-            };
-
-            store.put(user);
-            alert("User created successfully!");
-            document.getElementById("createUserSection").style.display = "none";
-            document.getElementById("shopSection").style.display = "block";
-            loadUser(username);
+    // Reload user on page refresh
+    async function reloadUser() {
+        const username = localStorage.getItem("currentUser");
+        if (username) {
+            await loadUser(username);
         }
+    }
 
-        // Load user data
-        async function loadUser(username) {
-            const db = await openDatabase();
-            const transaction = db.transaction("users", "readonly");
-            const store = transaction.objectStore("users");
-            const request = store.get(username);
+    // Purchase an item
+    async function purchaseItem(itemName, cost, image) {
+        const username = document.getElementById("currentUser").innerText;
+        const db = await openDatabase();
+        const transaction = db.transaction("users", "readwrite");
+        const store = transaction.objectStore("users");
+        const request = store.get(username);
 
-            request.onsuccess = function(event) {
-                const user = event.target.result;
-                if (user) {
-                    document.getElementById("currentUser").innerText = user.name;
-                    document.getElementById("userPoints").innerText = user.points;
-                    document.getElementById("userItems").innerText = user.items.length > 0 ? user.items.join(', ') : "None";
-                }
-            };
-        }
+        request.onsuccess = function(event) {
+            const user = event.target.result;
+            if (user.points >= cost) {
+                user.points -= cost;
+                user.items.push(itemName);
 
-        // Purchase an item
-        async function purchaseItem(itemName, cost, image) {
-            const username = document.getElementById("currentUser").innerText;
-            const db = await openDatabase();
-            const transaction = db.transaction("users", "readwrite");
-            const store = transaction.objectStore("users");
-            const request = store.get(username);
+                store.put(user);
 
-            request.onsuccess = function(event) {
-                const user = event.target.result;
-                if (user.points >= cost) {
-                    user.points -= cost;
-                    user.items.push(itemName);
+                alert(`You purchased ${itemName}!`);
+                document.getElementById("userPoints").innerText = user.points;
+                document.getElementById("userItems").innerText = user.items.join(', ');
+            } else {
+                alert("Not enough points!");
+            }
+        };
+    }
 
-                    store.put(user);
+    // Save current user to local storage
+    async function saveCurrentUser(username) {
+        localStorage.setItem("currentUser", username);
+    }
 
-                    alert(`You purchased ${itemName}!`);
-                    document.getElementById("userPoints").innerText = user.points;
-                    document.getElementById("userItems").innerText = user.items.join(', ');
-                } else {
-                    alert("Not enough points!");
-                }
-            };
-        }
-    </script>
+    // Initialize the app on page load
+    window.onload = async function() {
+        reloadUser();
+    };
+</script>
+
 </body>
 </html>
