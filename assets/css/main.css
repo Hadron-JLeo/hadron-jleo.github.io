@@ -183,7 +183,7 @@ input, select, textarea {
 		line-height: 1.5;
 		margin: 0 0 1rem 0;
 		text-transform: uppercase;
-		letter-spacing: 0.2rem;
+		letter-spacing: 0.1rem;
 	}
 
 		h1 a, h2 a, h3 a, h4 a, h5 a, h6 a {
@@ -204,13 +204,13 @@ input, select, textarea {
 	h1 {
 		font-size: 2.25rem;
 		line-height: 1.3;
-		letter-spacing: 0.5rem;
+		letter-spacing: 0.0rem;
 	}
 
 	h2 {
 		font-size: 1.5rem;
 		line-height: 1.4;
-		letter-spacing: 0.5rem;
+		letter-spacing: 0.0rem;
 	}
 
 	h3 {
@@ -382,7 +382,7 @@ input, select, textarea {
 		display: block;
 		font-size: 0.8rem;
 		font-weight: 300;
-		letter-spacing: 0.2rem;
+		letter-spacing: 0.1rem;
 		line-height: 1.5;
 		margin: 0 0 1rem 0;
 		text-transform: uppercase;
@@ -1314,6 +1314,13 @@ input, select, textarea {
 			border-top-width: 1px;
 			border-bottom-width: 1px;
 			max-width: 100%;
+		  
+			background-color: rgba(255, 255, 255, 0.2); /* semi-transparent white */
+			backdrop-filter: blur(50px);               /* the blur effect */
+			-webkit-backdrop-filter: blur(50px);       /* Safari support */
+		  
+			/* Optional: make it look smoother */
+			border-radius: 0.5em;
 		}
 
 			#header .content .inner {
@@ -1349,7 +1356,9 @@ input, select, textarea {
 			margin-bottom: 0;
 			list-style: none;
 			padding-left: 0;
-			border: solid 1px #ffffff;
+			padding-right: 5;
+
+			border: solid 2px #000000;
 			border-radius: 4px;
 		}
 
