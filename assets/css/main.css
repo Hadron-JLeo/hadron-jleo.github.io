@@ -737,6 +737,8 @@ input, select, textarea {
 
 	ul {
 		list-style: disc;
+		display: flex;
+		flex-direction: row;
 		margin: 0 0 2rem 0;
 		padding-left: 1em;
 	}
@@ -744,7 +746,6 @@ input, select, textarea {
 		ul li {
 			padding-left: 0.5em;
 			padding-right: 0.5em;
-
 		}
 
 		ul.alt {
